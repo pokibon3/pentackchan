@@ -26,6 +26,7 @@ void pwm_setup()
     pinMode(RL2_PIN, OUTPUT);
     pinMode(LED_BUILTIN, OUTPUT);
     pinMode(REMOTE_PIN, INPUT);
+
     ledcSetup(0, PWM_FREQ, PWM_LEVEL);
     ledcSetup(1, PWM_FREQ, PWM_LEVEL);
     ledcSetup(2, PWM_FREQ, PWM_LEVEL);
@@ -34,6 +35,7 @@ void pwm_setup()
     ledcSetup(5, PWM_FREQ, PWM_LEVEL);
     ledcSetup(6, PWM_FREQ, PWM_LEVEL);
     ledcSetup(7, PWM_FREQ, PWM_LEVEL);
+    
     ledcAttachPin(FR1_PIN, 0);
     ledcAttachPin(FR2_PIN, 1);
     ledcAttachPin(FL1_PIN, 2);
@@ -93,12 +95,27 @@ static uint8_t remote_control()
     }
 
     if (cmd == 'F') {
-        ledcWrite(0, 128);
-        ledcWrite(1, 128);
-    } else if (cmd ==  0) {
+        ledcWrite(0, 128);        // FR
+        ledcWrite(1, 0);
+    } else if (cmd ==  'B') {   // FL
+        ledcWrite(2, 128);
+        ledcWrite(3, 0);
+    } else if (cmd ==  '>') {   // RR
+        ledcWrite(4, 128);
+        ledcWrite(5, 0);
+    } else if (cmd ==  '<') {   // RL
+        ledcWrite(6, 128);
+        ledcWrite(7, 0);
+    } else if (cmd ==  'Q') {
         ledcWrite(0, 0);
         ledcWrite(1, 0);
-    }
+        ledcWrite(2, 0);
+        ledcWrite(3, 0);
+        ledcWrite(4, 0);
+        ledcWrite(5, 0);
+        ledcWrite(6, 0);
+        ledcWrite(7, 0);
+    } 
 //    Serial.printf("cmd = %c(0x%02x)\n", cmd, cmd & 0xff);
     return cmd;
 }
