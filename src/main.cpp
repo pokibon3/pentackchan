@@ -95,7 +95,7 @@ static uint8_t remote_control()
     }
 
     if (cmd == 'F') {
-        ledcWrite(0, 128);        // FR
+        ledcWrite(0, 128);      // FR
         ledcWrite(1, 0);
     } else if (cmd ==  'B') {   // FL
         ledcWrite(2, 128);
