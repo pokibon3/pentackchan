@@ -1,7 +1,6 @@
 //=========================================================
 //  ir_remote_control.cpp :  RumiCar ir remote control for mover
-//  History     : V1.0  2021-12-29 new create
-//				: V1.13 2022-08-05 Improve Remoto Control
+//  History     : V0.0  2025-05-10 new create
 //=========================================================
 #include <stdint.h>
 #include "pentackchan.hpp"

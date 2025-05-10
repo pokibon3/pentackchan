@@ -5,6 +5,7 @@
 #include <Arduino.h>
 #include "pentackchan.hpp"
 #include "ir_remote_control.hpp"
+#include "remote_control.hpp"
 
 //=========================================================
 //  prototypes definition
@@ -94,27 +95,16 @@ static uint8_t remote_control()
         cmd = 0;
     }
 
-    if (cmd == 'F') {
-        ledcWrite(0, 128);      // FR
-        ledcWrite(1, 0);
+    if (cmd == 'F') {           // FR
+        remote_fwd(SPEED_TYP);
     } else if (cmd ==  'B') {   // FL
-        ledcWrite(2, 128);
-        ledcWrite(3, 0);
+        remote_rwd(SPEED_TYP);
     } else if (cmd ==  '>') {   // RR
-        ledcWrite(4, 128);
-        ledcWrite(5, 0);
+        remote_right(SPEED_TYP);
     } else if (cmd ==  '<') {   // RL
-        ledcWrite(6, 128);
-        ledcWrite(7, 0);
+        remote_left(SPEED_TYP);
     } else if (cmd ==  'Q') {
-        ledcWrite(0, 0);
-        ledcWrite(1, 0);
-        ledcWrite(2, 0);
-        ledcWrite(3, 0);
-        ledcWrite(4, 0);
-        ledcWrite(5, 0);
-        ledcWrite(6, 0);
-        ledcWrite(7, 0);
+        remote_stop(SPEED_MAX);
     } 
 //    Serial.printf("cmd = %c(0x%02x)\n", cmd, cmd & 0xff);
     return cmd;
