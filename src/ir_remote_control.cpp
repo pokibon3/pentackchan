@@ -191,10 +191,10 @@ static uint8_t decode_akizuki(uint8_t ir_cmd)
 			cmd = 'A';
 			break;
 		case 0x78 :				// 'B'
-			cmd = 'M';
+			cmd = 'B';
 			break;
 		case 0x58 :				// 'C'
-			cmd = 'D';
+			cmd = 'C';
 			break;
 		default   :				// other button
 			cmd = 0;

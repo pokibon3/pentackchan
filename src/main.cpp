@@ -95,15 +95,27 @@ static uint8_t remote_control()
         cmd = 0;
     }
 
-    if (cmd == 'F') {           // FR
+    if        (cmd == 'F') {   // Fwd
         remote_fwd(SPEED_TYP);
-    } else if (cmd ==  'B') {   // FL
+    } else if (cmd == 'B') {   // Rwd
         remote_rwd(SPEED_TYP);
-    } else if (cmd ==  '>') {   // RR
+    } else if (cmd == '>') {   // Right
         remote_right(SPEED_TYP);
-    } else if (cmd ==  '<') {   // RL
+    } else if (cmd == 'R') {   // RightUp
+        remote_rightUp(SPEED_TYP);
+    } else if (cmd == 'r') {   // RightDown
+        remote_rightDown(SPEED_TYP);
+    } else if (cmd == '<') {   // Left
         remote_left(SPEED_TYP);
-    } else if (cmd ==  'Q') {
+    } else if (cmd == 'L') {   // LeftUp
+        remote_leftUp(SPEED_TYP);
+    } else if (cmd == 'l') {   // LeftDown
+        remote_leftDown(SPEED_TYP);
+    } else if (cmd == 'A') {   // LeftDown
+        remote_turnLeft(SPEED_TYP);
+    } else if (cmd == 'C') {   // LeftDown
+        remote_turnRight(SPEED_TYP);
+    } else if (cmd == 'Q') {
         remote_stop(SPEED_MAX);
     } 
 //    Serial.printf("cmd = %c(0x%02x)\n", cmd, cmd & 0xff);
