@@ -42,7 +42,6 @@ static uint8_t remote_control(void);
 static void dabble_joypad_control(void);
 static uint8_t apply_motor_calibration(uint8_t base_speed, float ratio);
 static void execute_motor_command(uint8_t cmd);
-static void setMotorPWM(uint8_t chFwd, uint8_t chRev, uint8_t speed, bool forward);
 
 //=========================================================
 //  Arduino setup function
@@ -174,7 +173,7 @@ void loop()
                 execute_motor_command(ir_cmd);
             }
             // Auto-stop if no IR command for a while
-            if (millis() - last_activity_time > 100) {
+            if (millis() - last_activity_time > 500) {
                 remote_stop(SPEED_MAX);
                 active_control = CONTROL_NONE;
             }
@@ -264,27 +263,31 @@ static void dabble_joypad_control()
     }
     
     // Check for preset movement buttons
-    if (GamePad.isTrianglePressed()) {         // Triangle - Forward
+    if (GamePad.isPressed(1)) {         // Triangle - Forward
         execute_motor_command('F');
-        Serial.println("# Move Forward"); 
+        Serial.println("# Move Forward");
         return;
-    } else if (GamePad.isCrossPressed()) {  // Cross - Backward
+    } else if (GamePad.isPressed(2)) {  // Square - Left
+        execute_motor_command('<');
+        Serial.println("# Move Left");
+        return;
+    } else if (GamePad.isPressed(3)) {  // Circle - Right  
+        execute_motor_command('>');
+        Serial.println("# Move Right");
+        return;
+    } else if (GamePad.isPressed(4)) {  // Cross - Backward
         execute_motor_command('B');
-
+        
         return;
-    } else if (GamePad.isStartPressed()) {  // Start - Stop
+    } else if (GamePad.isPressed(5)) {  // Start - Stop
         execute_motor_command('Q');
         Serial.println("# Stop");
         return;
-    } else if (GamePad.isSelectPressed()) {  // Select - Stop
-        execute_motor_command('Q');
-        Serial.println("# Stop");
-        return;
-    } else if (GamePad.isSquarePressed()) {  // Select - Turn Left
+    } else if (GamePad.isPressed(6)) {  // Select - Turn Left
         execute_motor_command('A');
         Serial.println("# Turn Left");
         return;
-    } else if (GamePad.isCirclePressed()) {  // Turn Right  
+    } else if (GamePad.isPressed(7)) {  // Turn Right  
         execute_motor_command('C');
         Serial.println("# Turn Right");
         return;
@@ -299,57 +302,77 @@ static void dabble_joypad_control()
         remote_stop(SPEED_MAX);
         return;
     }
+    
+    // Calculate motor speeds based on joystick input
+    // Tank drive: left stick Y = forward/backward, left stick X = turn
+    float left_speed = (y_axis + x_axis) * JOY_FACTOR; // Left side speed
+    float right_speed = (y_axis - x_axis) * JOY_FACTOR; // Right side speed
+    
+    // Limit speeds to valid range
+    left_speed = constrain(left_speed, -JOYPAD_MAX_VALUE, JOYPAD_MAX_VALUE);
+    right_speed = constrain(right_speed, -JOYPAD_MAX_VALUE, JOYPAD_MAX_VALUE);
+    
+    // Convert to PWM values (0-255)
+    uint8_t left_pwm = abs(left_speed) * SPEED_FACTOR;
+    uint8_t right_pwm = abs(right_speed) * SPEED_FACTOR;
+    
+    // Apply motor calibration
+    uint8_t fl_speed = apply_motor_calibration(left_pwm, FL_POWER_RATIO);
+    uint8_t fr_speed = apply_motor_calibration(right_pwm, FR_POWER_RATIO);
+    uint8_t rl_speed = apply_motor_calibration(left_pwm, RL_POWER_RATIO);
+    uint8_t rr_speed = apply_motor_calibration(right_pwm, RR_POWER_RATIO);
 
-    float x = x_axis * JOY_FACTOR;
-    float y = y_axis * JOY_FACTOR;
-
-    // メカナム用ミキシング
-    float fl = y + x;   // Front-Left
-    float fr = y - x;   // Front-Right
-    float rl = y - x;   // Rear-Left
-    float rr = y + x;   // Rear-Right
-    // 正規化：いずれかが±100を超えたら全体をスケーリング
-    float maxVal = max( max(abs(fl), abs(fr)), max(abs(rl), abs(rr)) );
-    if (maxVal > JOYPAD_MAX_VALUE) {
-        float scale = JOYPAD_MAX_VALUE / maxVal;
-        fl *= scale;  fr *= scale;
-        rl *= scale;  rr *= scale;
-    }
-    // PWM化（255/100 ≒ 2.55f）
-    uint8_t pwmFL = abs(fl) * 2.0f;
-    uint8_t pwmFR = abs(fr) * 2.0f;
-    uint8_t pwmRL = abs(rl) * 2.0f;
-    uint8_t pwmRR = abs(rr) * 2.0f;
-        // キャリブレーション適用
-    pwmFL = apply_motor_calibration(pwmFL, FL_POWER_RATIO);
-    pwmFR = apply_motor_calibration(pwmFR, FR_POWER_RATIO);
-    pwmRL = apply_motor_calibration(pwmRL, RL_POWER_RATIO);
-    pwmRR = apply_motor_calibration(pwmRR, RR_POWER_RATIO);
-
-    Serial.printf("# Dabble JoyPad Control: FL=%d, FR=%d, RL=%d, RR=%d\n", pwmFL, pwmFR, pwmRL, pwmRR);
-
-    // モーター出力（chFwd, chRev, PWM値, forward?）
-    setMotorPWM(TIRE_FL1, TIRE_FL2, pwmFL, fl >= 0);  // Front-Left
-    setMotorPWM(TIRE_FR1, TIRE_FR2, pwmFR, fr >= 0);  // Front-Right
-    setMotorPWM(TIRE_RL1, TIRE_RL2, pwmRL, rl >= 0);  // Rear-Left
-    setMotorPWM(TIRE_RR1, TIRE_RR2, pwmRR, rr >= 0);  // Rear-Right
-}
-// chFwd: 前進用の LEDC チャネル（例: TIRE_FL1）
-// chRev: 後進用の LEDC チャネル（例: TIRE_FL2）
-// speed: 0〜255 の PWM 値
-// forward: true→前進, false→後進
-static void setMotorPWM(uint8_t chFwd, uint8_t chRev, uint8_t speed, bool forward)
-{
-    if (forward) {
-        // 前進
-        ledcWrite(chFwd, speed);
-        ledcWrite(chRev, 0);
+    Serial.printf("# Dabble JoyPad Control: X=%d, Y=%d | Left=%.0f, Right=%.0f | PWM: FL=%d, FR=%d, RL=%d, RR=%d\n", 
+                 x_axis, y_axis, left_speed, right_speed, fl_speed, fr_speed, rl_speed, rr_speed);
+    
+    // Control motors based on direction
+    if (left_speed > JOYPAD_DEADZONE) {
+        // Left side forward
+        ledcWrite(TIRE_FL1, fl_speed);
+        ledcWrite(TIRE_FL2, 0);
+        ledcWrite(TIRE_RL1, rl_speed);
+        ledcWrite(TIRE_RL2, 0);
+    } else if (left_speed < -JOYPAD_DEADZONE) {
+        // Left side backward
+        ledcWrite(TIRE_FL1, 0);
+        ledcWrite(TIRE_FL2, fl_speed);
+        ledcWrite(TIRE_RL1, 0);
+        ledcWrite(TIRE_RL2, rl_speed);
     } else {
-        // 後進
-        ledcWrite(chFwd, 0);
-        ledcWrite(chRev, speed);
+        // Left side stop
+        ledcWrite(TIRE_FL1, 0);
+        ledcWrite(TIRE_FL2, 0);
+        ledcWrite(TIRE_RL1, 0);
+        ledcWrite(TIRE_RL2, 0);
     }
+    
+    if (right_speed > JOYPAD_DEADZONE) {
+        // Right side forward
+        ledcWrite(TIRE_FR1, fr_speed);
+        ledcWrite(TIRE_FR2, 0);
+        ledcWrite(TIRE_RR1, rr_speed);
+        ledcWrite(TIRE_RR2, 0);
+    } else if (right_speed < -JOYPAD_DEADZONE) {
+        // Right side backward
+        ledcWrite(TIRE_FR1, 0);
+        ledcWrite(TIRE_FR2, fr_speed);
+        ledcWrite(TIRE_RR1, 0);
+        ledcWrite(TIRE_RR2, rr_speed);
+    } else {
+        // Right side stop
+        ledcWrite(TIRE_FR1, 0);
+        ledcWrite(TIRE_FR2, 0);
+        ledcWrite(TIRE_RR1, 0);
+        ledcWrite(TIRE_RR2, 0);
+    }
+    
+    // Debug output (uncomment if needed)
+    /*
+    Serial.printf("Joy: X=%d, Y=%d | Left=%.0f, Right=%.0f | PWM: FL=%d, FR=%d, RL=%d, RR=%d\n", 
+                 x_axis, y_axis, left_speed, right_speed, fl_speed, fr_speed, rl_speed, rr_speed);
+    */
 }
+
 //=========================================================
 //  Apply Motor Calibration
 //=========================================================

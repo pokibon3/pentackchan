@@ -25,7 +25,7 @@
 #define TIRE_RL1		 6		// Rear Tire
 #define TIRE_RL2		 7		// Rear Tire
 
-#define SPEED_TYP		160		// Speed Type
+#define SPEED_TYP		200		// Speed Type
 #define SPEED_ZERO		  0		// Speed Max
 #define SPEED_MAX		255		// Speed Max
 
