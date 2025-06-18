@@ -48,3 +48,28 @@ enum {
 // PWM function
 #define PWM_LEVEL 	8
 #define PWM_FREQ    490         // 490Hz
+
+//=========================================================
+//  Motor Power Calibration Constants
+//=========================================================
+#define FR_POWER_RATIO  1.20f   // Front Right motor power ratio
+#define FL_POWER_RATIO  1.20f   // Front Left motor power ratio  
+#define RR_POWER_RATIO  1.00f   // Rear Right motor power ratio
+#define RL_POWER_RATIO  1.00f   // Rear Left motor power ratio
+#define JOY_FACTOR      100.0f / 6.0f   // Joystick factor for turning
+
+//=========================================================
+//  JoyPad Parameters
+//=========================================================
+#define JOYPAD_DEADZONE     1  // Deadzone for joystick
+#define JOYPAD_MAX_VALUE   100  // Maximum joystick value
+#define SPEED_FACTOR       2.00f // Conversion factor (255/100)
+
+//=========================================================
+//  Control Mode
+//=========================================================
+enum ControlMode {
+    CONTROL_NONE = 0,
+    CONTROL_IR,
+    CONTROL_DABBLE
+};

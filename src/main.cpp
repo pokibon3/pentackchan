@@ -11,31 +11,6 @@
 #include "remote_control.hpp"
 
 //=========================================================
-//  Motor Power Calibration Constants
-//=========================================================
-#define FR_POWER_RATIO  1.10f   // Front Right motor power ratio
-#define FL_POWER_RATIO  1.10f   // Front Left motor power ratio  
-#define RR_POWER_RATIO  1.00f   // Rear Right motor power ratio
-#define RL_POWER_RATIO  1.00f   // Rear Left motor power ratio
-#define JOY_FACTOR      100.0f / 6.0f   // Joystick factor for turning
-
-//=========================================================
-//  JoyPad Parameters
-//=========================================================
-#define JOYPAD_DEADZONE     1  // Deadzone for joystick
-#define JOYPAD_MAX_VALUE   100  // Maximum joystick value
-#define SPEED_FACTOR       2.00f // Conversion factor (255/100)
-
-//=========================================================
-//  Control Mode
-//=========================================================
-enum ControlMode {
-    CONTROL_NONE = 0,
-    CONTROL_IR,
-    CONTROL_DABBLE
-};
-
-//=========================================================
 //  prototypes definition
 //=========================================================
 static uint8_t remote_control(void);
@@ -253,7 +228,7 @@ static void execute_motor_command(uint8_t cmd)
 static void dabble_joypad_control()
 {
     // Get joystick values
-    int x_axis = GamePad.getXaxisData();  // -100 to +100 (left/right)
+    int x_axis = - GamePad.getXaxisData();  // -100 to +100 (left/right)
     int y_axis = GamePad.getYaxisData();  // -100 to +100 (forward/backward)
     
     // Check for emergency stop button

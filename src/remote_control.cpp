@@ -13,16 +13,16 @@
 void remote_fwd(uint8_t speed)
 {
     // FR
-    ledcWrite(TIRE_FR1, speed); 
+    ledcWrite(TIRE_FR1, speed * FR_POWER_RATIO); 
     ledcWrite(TIRE_FR2, SPEED_ZERO);
     //FL
-    ledcWrite(TIRE_FL1, speed);
+    ledcWrite(TIRE_FL1, speed * FL_POWER_RATIO);
     ledcWrite(TIRE_FL2, SPEED_ZERO);
     //RR
-    ledcWrite(TIRE_RR1, speed);
+    ledcWrite(TIRE_RR1, speed * RR_POWER_RATIO);
     ledcWrite(TIRE_RR2, SPEED_ZERO);
     //RL
-    ledcWrite(TIRE_RL1, speed);
+    ledcWrite(TIRE_RL1, speed * RL_POWER_RATIO);
     ledcWrite(TIRE_RL2, SPEED_ZERO);
 }
 
@@ -30,38 +30,38 @@ void remote_rwd(uint8_t speed)
 {
     // FR
     ledcWrite(TIRE_FR1, SPEED_ZERO); 
-    ledcWrite(TIRE_FR2, speed);
+    ledcWrite(TIRE_FR2, speed * FR_POWER_RATIO);
     //FL
     ledcWrite(TIRE_FL1, SPEED_ZERO);
-    ledcWrite(TIRE_FL2, speed);
+    ledcWrite(TIRE_FL2, speed * FL_POWER_RATIO);
     //RR
     ledcWrite(TIRE_RR1, SPEED_ZERO);
-    ledcWrite(TIRE_RR2, speed);
+    ledcWrite(TIRE_RR2, speed * RR_POWER_RATIO);
     //RL
     ledcWrite(TIRE_RL1, SPEED_ZERO);
-    ledcWrite(TIRE_RL2, speed);
+    ledcWrite(TIRE_RL2, speed * RL_POWER_RATIO);
 }
 
 void remote_right(uint8_t speed)
 {
     // FR
-    ledcWrite(TIRE_FR1, speed); 
+    ledcWrite(TIRE_FR1, speed * FR_POWER_RATIO); 
     ledcWrite(TIRE_FR2, SPEED_ZERO);
     // FL
     ledcWrite(TIRE_FL1, SPEED_ZERO);
-    ledcWrite(TIRE_FL2, speed);
+    ledcWrite(TIRE_FL2, speed * FL_POWER_RATIO);
     // RR
     ledcWrite(TIRE_RR1, SPEED_ZERO);
-    ledcWrite(TIRE_RR2, speed);
+    ledcWrite(TIRE_RR2, speed * RR_POWER_RATIO);
     // RL
-    ledcWrite(TIRE_RL1, speed);
+    ledcWrite(TIRE_RL1, speed * RL_POWER_RATIO);
     ledcWrite(TIRE_RL2, SPEED_ZERO);
 }
 
 void remote_rightUp(uint8_t speed)
 {
     // FR
-    ledcWrite(TIRE_FR1, speed); 
+    ledcWrite(TIRE_FR1, speed * FR_POWER_RATIO); 
     ledcWrite(TIRE_FR2, SPEED_ZERO);
     // FL
     ledcWrite(TIRE_FL1, SPEED_MAX);
@@ -70,7 +70,7 @@ void remote_rightUp(uint8_t speed)
     ledcWrite(TIRE_RR1, SPEED_MAX);
     ledcWrite(TIRE_RR2, SPEED_MAX);
     // RL
-    ledcWrite(TIRE_RL1, speed);
+    ledcWrite(TIRE_RL1, speed * RL_POWER_RATIO);
     ledcWrite(TIRE_RL2, SPEED_ZERO);
 }
 
@@ -78,7 +78,7 @@ void remote_leftDown(uint8_t speed)
 {
     // FR
     ledcWrite(TIRE_FR1, SPEED_ZERO); 
-    ledcWrite(TIRE_FR2, speed);
+    ledcWrite(TIRE_FR2, speed * FR_POWER_RATIO);
     // FL
     ledcWrite(TIRE_FL1, SPEED_MAX);
     ledcWrite(TIRE_FL2, SPEED_MAX);
@@ -87,39 +87,39 @@ void remote_leftDown(uint8_t speed)
     ledcWrite(TIRE_RR2, SPEED_MAX);
     // RL
     ledcWrite(TIRE_RL1, SPEED_ZERO);
-    ledcWrite(TIRE_RL2, speed);
+    ledcWrite(TIRE_RL2, speed * RL_POWER_RATIO);
 }
 
 void remote_turnLeft(uint8_t speed)
 {
     // FR
-    ledcWrite(TIRE_FR1, speed); 
+    ledcWrite(TIRE_FR1, speed * FR_POWER_RATIO); 
     ledcWrite(TIRE_FR2, SPEED_ZERO);
     // FL
     ledcWrite(TIRE_FL1, SPEED_ZERO);
-    ledcWrite(TIRE_FL2, speed);
+    ledcWrite(TIRE_FL2, speed * FL_POWER_RATIO);
     // RR
-    ledcWrite(TIRE_RR1, speed);
+    ledcWrite(TIRE_RR1, speed * RR_POWER_RATIO);
     ledcWrite(TIRE_RR2, SPEED_ZERO);
     // RL
     ledcWrite(TIRE_RL1, SPEED_ZERO);
-    ledcWrite(TIRE_RL2, speed);
+    ledcWrite(TIRE_RL2, speed * RL_POWER_RATIO);
 }
 
 void remote_left(uint8_t speed)
 {
     // FR
     ledcWrite(TIRE_FR1, SPEED_ZERO); 
-    ledcWrite(TIRE_FR2, speed);
+    ledcWrite(TIRE_FR2, speed * FR_POWER_RATIO);
     //FL
-    ledcWrite(TIRE_FL1, speed);
+    ledcWrite(TIRE_FL1, speed * FL_POWER_RATIO);
     ledcWrite(TIRE_FL2, SPEED_ZERO);
     //RR
-    ledcWrite(TIRE_RR1, speed);
+    ledcWrite(TIRE_RR1, speed * RR_POWER_RATIO);
     ledcWrite(TIRE_RR2, SPEED_ZERO);
     //RL
     ledcWrite(TIRE_RL1, SPEED_ZERO);
-    ledcWrite(TIRE_RL2, speed);
+    ledcWrite(TIRE_RL2, speed * RL_POWER_RATIO);
 }
 void remote_leftUp(uint8_t speed)
 {
@@ -127,10 +127,10 @@ void remote_leftUp(uint8_t speed)
     ledcWrite(TIRE_FR1, SPEED_MAX); 
     ledcWrite(TIRE_FR2, SPEED_MAX);
     //FL
-    ledcWrite(TIRE_FL1, speed);
+    ledcWrite(TIRE_FL1, speed * FL_POWER_RATIO);
     ledcWrite(TIRE_FL2, SPEED_ZERO);
     //RR
-    ledcWrite(TIRE_RR1, speed);
+    ledcWrite(TIRE_RR1, speed * RR_POWER_RATIO);
     ledcWrite(TIRE_RR2, SPEED_ZERO);
     //RL
     ledcWrite(TIRE_RL1, SPEED_MAX);
@@ -144,10 +144,10 @@ void remote_rightDown(uint8_t speed)
     ledcWrite(TIRE_FR2, SPEED_MAX);
     //FL
     ledcWrite(TIRE_FL1, SPEED_ZERO);
-    ledcWrite(TIRE_FL2, speed);
+    ledcWrite(TIRE_FL2, speed * FL_POWER_RATIO);
     //RR
     ledcWrite(TIRE_RR1, SPEED_ZERO);
-    ledcWrite(TIRE_RR2, speed);
+    ledcWrite(TIRE_RR2, speed * RR_POWER_RATIO);
     //RL
     ledcWrite(TIRE_RL1, SPEED_MAX);
     ledcWrite(TIRE_RL2, SPEED_MAX);
@@ -157,15 +157,15 @@ void remote_turnRight(uint8_t speed)
 {
     // FR
     ledcWrite(TIRE_FR1, SPEED_ZERO); 
-    ledcWrite(TIRE_FR2, speed);
+    ledcWrite(TIRE_FR2, speed * FR_POWER_RATIO);
     //FL
-    ledcWrite(TIRE_FL1, speed);
+    ledcWrite(TIRE_FL1, speed * FL_POWER_RATIO);
     ledcWrite(TIRE_FL2, SPEED_ZERO);
     //RR
     ledcWrite(TIRE_RR1, SPEED_ZERO);
-    ledcWrite(TIRE_RR2, speed);
+    ledcWrite(TIRE_RR2, speed * RR_POWER_RATIO);
     //RL
-    ledcWrite(TIRE_RL1, speed);
+    ledcWrite(TIRE_RL1, speed * RL_POWER_RATIO);
     ledcWrite(TIRE_RL2, SPEED_ZERO);
 
 }
